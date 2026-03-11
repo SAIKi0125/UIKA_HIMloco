@@ -1,0 +1,13 @@
+/logs
+/onnx
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Local eval exports
+deploy/deploy_mujoco/reports/
+
+# Local scratch files
+Ignoring

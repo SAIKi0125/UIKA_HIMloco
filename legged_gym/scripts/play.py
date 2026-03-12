@@ -217,6 +217,6 @@ if __name__ == '__main__':
     RECORD_FRAMES = False
     MOVE_CAMERA = False
     args = get_args()
-    play(args, x_vel=2.0, y_vel=0.0, yaw_vel=0.0)
+    play(args, x_vel=1.0, y_vel=0.0, yaw_vel=0.0)
 
 # export PYTHONPATH=. && python legged_gym/scripts/play.py --task=htdw_4438 --load_run Jan27_17-56-48_htdw_4438_himloco_v1 --checkpoint 1500

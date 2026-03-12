@@ -75,7 +75,7 @@ class Htdw4438Cfg(LeggedRobotCfg):
     # 4. 指令范围 (低速限制)   
     # ==========================
     class commands(LeggedRobotCfg.commands):
-        curriculum = True # 
+        curriculum = True # 开启课程学习
         max_curriculum = 1.0
         num_commands = 4  # x vel, y vel, yaw vel, heading
         resampling_time = 10. # 每 10 秒重新采样一次指令

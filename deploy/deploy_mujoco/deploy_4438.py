@@ -21,11 +21,19 @@ def resolve_onnx_path():
     if env_path:
         return os.path.abspath(os.path.expanduser(env_path))
 
+    default_path = os.path.join(
+        PROJECT_ROOT,
+        "onnx",
+        "flat_htdw_4438_20260312_103248_model_3400.onnx",
+    )
+    if os.path.exists(default_path):
+        return default_path
+
     candidates = sorted(glob.glob(os.path.join(PROJECT_ROOT, "onnx", "*.onnx")))
     if candidates:
         return candidates[-1]
 
-    return os.path.join(PROJECT_ROOT, "onnx", "flat_htdw_4438.onnx")
+    return default_path
 
 
 ONNX_PATH = resolve_onnx_path()

@@ -21,19 +21,11 @@ def resolve_onnx_path():
     if env_path:
         return os.path.abspath(os.path.expanduser(env_path))
 
-    default_path = os.path.join(
-        PROJECT_ROOT,
-        "onnx",
-        "flat_htdw_4438_20260310_181419_model_2400.onnx",
-    )
-    if os.path.exists(default_path):
-        return default_path
-
     candidates = sorted(glob.glob(os.path.join(PROJECT_ROOT, "onnx", "*.onnx")))
     if candidates:
         return candidates[-1]
 
-    return default_path
+    return os.path.join(PROJECT_ROOT, "onnx", "flat_htdw_4438.onnx")
 
 
 ONNX_PATH = resolve_onnx_path()
@@ -68,6 +60,19 @@ def quat_rotate_inverse(q, v):
 
 def pd_control(target_q, q, kp, target_dq, dq, kd):
     return (target_q - q) * kp + (target_dq - dq) * kd
+
+
+def build_policy_input(obs_raw, history_buffer, input_dim, num_obs):
+    if input_dim == num_obs:
+        history_buffer.appendleft(obs_raw.copy())
+        return np.concatenate(list(history_buffer), axis=0).reshape(1, -1)
+    if input_dim == 64:
+        policy_input = np.zeros((1, 64), dtype=np.float32)
+        policy_input[0, :45] = obs_raw
+        return policy_input
+    if input_dim == 45:
+        return obs_raw.reshape(1, -1)
+    raise ValueError(f"Unsupported ONNX input dim: {input_dim}")
 
 # def pd_control(target_q, q, kp, kd, qvel, kds_val):
 #     # 修改：确保传入并使用了微分增益 kds_val
@@ -117,8 +122,10 @@ def run_simulation():
         config = yaml.load(f, Loader=yaml.FullLoader)
     
     # 提取参数
-    sim_dt = 0.005 # config['simulation_dt']
-    control_decimation = 2 # config['control_decimation'] 强制为 2 (100Hz)
+    sim_dt = float(config.get('simulation_dt', 0.005))
+    control_decimation = int(config.get('control_decimation', 2))
+    num_obs = int(config.get('num_obs', 270))
+    num_one_step_obs = int(config.get('num_one_step_obs', 45))
     init_base_height = float(config.get('init_base_height', 0.15))
     
     kps = np.array(config['kps'], dtype=np.float32)
@@ -156,8 +163,8 @@ def run_simulation():
     print(f"正在加载 ONNX: {ONNX_PATH}")
     ort_session = ort.InferenceSession(ONNX_PATH)
     input_name = ort_session.get_inputs()[0].name
-    # 检查一下输入维度，确保是 270
     input_shape = ort_session.get_inputs()[0].shape
+    input_dim = int(input_shape[-1]) if isinstance(input_shape[-1], int) else num_obs
     print(f"ONNX Input Shape: {input_shape}")
 
     # --- 初始化状态 ---
@@ -173,11 +180,8 @@ def run_simulation():
     listener.start()
     print("仿真开始！使用方向键控制移动，空格键暂停。")
 
-    # === 新增：历史观测队列 ===
-    # 长度为 6，对应 config 中的 num_observations / num_one_step_observations
-    history_len = 6
-    obs_dim = 45
-    # 初始化全为 0 的队列
+    history_len = max(1, num_obs // num_one_step_obs)
+    obs_dim = num_one_step_obs
     obs_history_buffer = deque([np.zeros(obs_dim, dtype=np.float32) for _ in range(history_len)], maxlen=history_len)
 
     # --- 仿真循环 ---
@@ -221,30 +225,15 @@ def run_simulation():
                     
                     obs_raw = np.array(obs_list, dtype=np.float32)
                     
-                    # # === 核心修改：更新历史队列并构建输入 ===
-                    # # 将最新观测加入队列左侧（如果你的训练代码是把最新帧放在最前面）
-                    # # 或者 append (如果最新帧在最后)。
-                    # # ⚠️ 这里的顺序非常关键！
-                    # # LeggedGym 通常的做法：obs = torch.cat((current_obs, obs_history_frames...), dim=1)
-                    # # 也就是说：[当前帧, 历史1, 历史2, 历史3, 历史4, 历史5]
-                    
-                    # obs_history_buffer.appendleft(obs_raw) 
-                    
-                    # # 展平为一维数组 [270]
-                    # # buffer[0] 是最新帧, buffer[5] 是最旧帧
-                    # full_history_input = np.concatenate(obs_history_buffer)
-                    
-                    # # 4. 适配 ONNX 输入 (270维)
-                    # # 此时全输入即为历史数据，Latent 会在 ONNX 内部计算
-
-                    # 4. 适配 ONNX 输入 (64维)
-                    # 你的模型输入 = 45 (Obs) + 19 (Latent)
-                    full_input = np.zeros(64, dtype=np.float32)
-                    full_input[:45] = obs_raw
-                    # full_input[45:] = 0.0 # Latent 留空
+                    policy_input = build_policy_input(
+                        obs_raw=obs_raw,
+                        history_buffer=obs_history_buffer,
+                        input_dim=input_dim,
+                        num_obs=num_obs,
+                    )
                     
                     # 5. 推理
-                    outputs = ort_session.run(None, {input_name: full_input.reshape(1, -1)})
+                    outputs = ort_session.run(None, {input_name: policy_input})
                     raw_action = outputs[0][0]
                     
                     # 6. 处理输出

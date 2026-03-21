@@ -1,6 +1,7 @@
 {
-    "python.defaultInterpreterPath": "python",
+    "python.defaultInterpreterPath": "/home/lain/miniconda3/envs/Lain_env/bin/python",
     "python.terminal.activateEnvironment": true,
     "terminal.integrated.defaultProfile.linux": "bash",
-    "python-envs.pythonProjects": []
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda"
 }

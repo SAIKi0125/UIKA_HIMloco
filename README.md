@@ -2,9 +2,9 @@
 
 面向 UIKA 四足机器人的强化学习训练、策略导出与 MuJoCo 部署的项目。
 
-![UIKA](./assets/image.png)
-
 本项目基于 [HIMLoco](https://github.com/InternRobotics/HIMLoco)，围绕 `uika` 任务整理了从训练、回放到 ONNX 导出和 MuJoCo sim2sim 部署的常用流程。
+
+特别鸣谢Lain佬的开源HIMloco框架（https://github.com/Lain-Ego0/HTDW4438_HIMloco）
 
 ## 快速开始
 

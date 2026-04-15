@@ -10,4 +10,9 @@ __pycache__/
 deploy/deploy_mujoco/reports/
 
 # Local scratch files
-Ignoring
+.codex
+.vscode/
+wandb
+deploy/deploy_mujoco.zip
+resources/robots/uika.zip
+rl_sar-UIKA/

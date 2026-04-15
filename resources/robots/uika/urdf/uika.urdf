@@ -1,0 +1,484 @@
+<robot name="UIKA">
+  <link name="base">
+    <inertial>
+      <origin xyz="0.0993589953258177 -0.000347868138743462 -0.0602742254852854" rpy="0 0 0" />
+      <mass value="6.09961854" />
+      <inertia ixx="0.02511856" ixy="0.00009160" ixz="-0.00692101" iyy="0.07600646" iyz="-0.00001621" izz="0.08133534 " />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/base.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/base.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="FL_hip">
+    <inertial>
+      <origin xyz="0.0415030017853425 0.00817193653082768 0.00860885998023001" rpy="0 0 0" />
+      <mass value="0.93308959" />
+      <inertia ixx="0.00115759" ixy="-0.00005099" ixz="-0.00006730" iyy="0.00110208" iyz="-0.00014553" izz="0.00110642" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_hip.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FL_hip_joint" type="revolute">
+    <origin xyz="0.153000439855044 0.0600003842452415 -0.0600006101205791" rpy="0 0 0" />
+    <parent link="base" />
+    <child link="FL_hip" />
+    <axis xyz="1 0 0" />
+    <limit lower="-1.5" upper="0" effort="6" velocity="28.80" />
+  </joint>
+  <link name="FL_thigh">
+    <inertial>
+      <origin xyz="-0.0535775244580455 0.0350832915184582 -0.0163587879417473" rpy="0 0 0" />
+      <mass value="0.47644935" />
+      <inertia ixx="0.00108325" ixy="0.00075484" ixz="-0.00076870" iyy="0.00222936" iyz="0.00047262" izz="0.00221100" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_thigh.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FL_thigh_joint" type="revolute">
+    <origin xyz="0.0560002942624635 0.0483946520428511 0.0470555828957988" rpy="0 0 0" />
+    <parent link="FL_hip" />
+    <child link="FL_thigh" />
+    <axis xyz="0 0.716968137917879 0.697105938298167" />
+    <limit lower="-0.785" upper="0.785" effort="6" velocity="28.80" />
+  </joint>
+  <link name="FL_calf">
+    <inertial>
+      <origin xyz="0.0700291670932001 -0.015965855611679 -0.00222776798959823" rpy="0 0 0" />
+      <mass value="0.14745425" />
+      <inertia ixx="0.00002268" ixy="0.00004129" ixz="0.00004247" iyy="0.00073677" iyz="0.00000895" izz="0.00073626" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_calf.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FL_calf_joint" type="revolute">
+    <origin xyz="-0.152475747348646 0.109582492974347 -0.07397319848129" rpy="0 0 0" />
+    <parent link="FL_thigh" />
+    <child link="FL_calf" />
+    <axis xyz="0 0.716968137917877 0.69710593829817" />
+    <limit lower="0.1" upper="1.11" effort="11.2" velocity="15.43" />
+  </joint>
+  <link name="FL_foot">
+    <inertial>
+      <origin xyz="-0.0105383510676763 -0.00443303932993289 0.00455926040185234" rpy="0 0 0" />
+      <mass value="0.04697856" />
+      <inertia ixx="0.00000818" ixy="0" ixz="0" iyy="0.00000918" iyz="0" izz="0.00000915" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_foot.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FL_foot.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FL_foot_joint" type="fixed">
+    <origin xyz="0.211725899509592 -0.00252783551179853 -0.0167659233263265" rpy="0 0 0" />
+    <parent link="FL_calf" />
+    <child link="FL_foot" />
+    <axis xyz="0 0 0" />
+  </joint>
+  <link name="FR_hip">
+    <inertial>
+      <origin xyz="0.0416078227711511 -0.0104146438294053 0.0101964785626593" rpy="0 0 0" />
+      <mass value="0.93308959" />
+      <inertia ixx="0.00114451" ixy="0.00003806" ixz="-0.00003484" iyy="0.00106757" iyz="0.00013340" izz="0.00112221" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_hip.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FR_hip_joint" type="revolute">
+    <origin xyz="0.153000425358075 -0.0600004472669823 -0.0600003113075975" rpy="0 0 0" />
+    <parent link="base" />
+    <child link="FR_hip" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="1.5" effort="6" velocity="28.80" />
+  </joint>
+  <link name="FR_thigh">
+    <inertial>
+      <origin xyz="-0.0547142990756392 -0.0356584537936173 -0.0169064776984609" rpy="0 0 0" />
+      <mass value="0.48074554" />
+      <inertia ixx="0.00111780" ixy="-0.00079086" ixz="-0.00080310" iyy="0.00231794" iyz="-0.00048974" izz="0.00230119" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_thigh.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FR_thigh_joint" type="revolute">
+    <origin xyz="0.0560001425520644 -0.0483952686957443 0.047054585042635" rpy="0 0 0" />
+    <parent link="FR_hip" />
+    <child link="FR_thigh" />
+    <axis xyz="0 -0.716968137917902 0.697105938298144" />
+    <limit lower="-0.785" upper="0.785" effort="6" velocity="28.80" />
+  </joint>
+  <link name="FR_calf">
+    <inertial>
+      <origin xyz="0.0700291670951076 0.0159658555227684 -0.0022277679039307" rpy="0 0 0" />
+      <mass value="0.14745425" />
+      <inertia ixx="0.00002268" ixy="-0.00004129" ixz="-0.00004247" iyy="0.00073677" iyz="-0.00000895" izz="0.00073626" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_calf.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FR_calf_joint" type="revolute">
+    <origin xyz="-0.152475581141278 -0.109581813299707 -0.0739724994411187" rpy="0 0 0" />
+    <parent link="FR_thigh" />
+    <child link="FR_calf" />
+    <axis xyz="0 -0.716968137917903 0.697105938298144" />
+    <limit lower="-1.11" upper="-0.1" effort="11.2" velocity="15.43" />
+  </joint>
+  <link name="FR_foot">
+    <inertial>
+      <origin xyz="-0.0105383478998533 0.0044329513755467 0.00455934568546953" rpy="0 0 0" />
+      <mass value="0.04697856" />
+      <inertia ixx="0.00000818" ixy="0" ixz="0" iyy="0.00000918" iyz="0" izz="0.00000915" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_foot.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/FR_foot.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="FR_foot_joint" type="fixed">
+    <origin xyz="0.211725899509592 0.00252783231169756 -0.0167659202148746" rpy="0 0 0" />
+    <parent link="FR_calf" />
+    <child link="FR_foot" />
+    <axis xyz="0 0 0" />
+  </joint>
+  <link name="RL_hip">
+    <inertial>
+      <origin xyz="-0.0415758519890377 0.0101366668291682 0.0104818480714982" rpy="0 0 0" />
+      <mass value="0.93308959" />
+      <inertia ixx="0.00113963" ixy="0.00003148" ixz="0.00002966" iyy="0.00109432" iyz="-0.00013659" izz="0.00109594" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_hip.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RL_hip_joint" type="revolute">
+    <origin xyz="-0.152999574641922 0.0600000459667993 -0.0599994570016295" rpy="0 0 0" />
+    <parent link="base" />
+    <child link="RL_hip" />
+    <axis xyz="-1 0 0" />
+    <limit lower="0" upper="1.5" effort="6" velocity="28.80" />
+  </joint>
+  <link name="RL_thigh">
+    <inertial>
+      <origin xyz="-0.0547144667121707 0.0356782468970246 -0.0168886153666892" rpy="0 0 0" />
+      <mass value="0.48074554" />
+      <inertia ixx="0.00111780" ixy="0.00079200" ixz="-0.00080199" iyy="0.00231683" iyz="0.00048977" izz="0.00230230" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_thigh.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RL_thigh_joint" type="revolute">
+    <origin xyz="-0.0559996912405691 0.0483949903212994 0.0470544297768458" rpy="0 0 0" />
+    <parent link="RL_hip" />
+    <child link="RL_thigh" />
+    <axis xyz="0 0.716968137917878 0.697105938298169" />
+    <limit lower="-0.785" upper="0.785" effort="6" velocity="28.80" />
+  </joint>
+  <link name="RL_calf">
+    <inertial>
+      <origin xyz="0.0700291670931948 -0.0159658556116849 -0.00222776798959213" rpy="0 0 0" />
+      <mass value="0.14745425" />
+      <inertia ixx="0.00002268" ixy="0.00004129" ixz="-0.00004247" iyy="0.00073677" iyz="0.00000895" izz="0.00073626" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_calf.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RL_calf_joint" type="revolute">
+    <origin xyz="-0.152475747348643 0.109582492974347 -0.0739731984812923" rpy="0 0 0" />
+    <parent link="RL_thigh" />
+    <child link="RL_calf" />
+    <axis xyz="0 0.716968137917874 0.697105938298173" />
+    <limit lower="0.1" upper="1.11" effort="11.2" velocity="15.43" />
+  </joint>
+  <link name="RL_foot">
+    <inertial>
+      <origin xyz="-0.0105383510676786 -0.00443303932993727 0.0045592604018532" rpy="0 0 0" />
+      <mass value="0.04697856" />
+      <inertia ixx="0.00000818" ixy="0" ixz="0" iyy="0.00000918" iyz="0" izz="0.00000915" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_foot.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RL_foot.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RL_foot_joint" type="fixed">
+    <origin xyz="0.211725899509589 -0.00252783551179986 -0.0167659233263231" rpy="0 0 0" />
+    <parent link="RL_calf" />
+    <child link="RL_foot" />
+    <axis xyz="0 0 0" />
+  </joint>
+  <link name="RR_hip">
+    <inertial>
+      <origin xyz="-0.0416445343568521 -0.010769761078396 0.00983207310486511" rpy="0 0 0" />
+      <mass value="0.93308959" />
+      <inertia ixx="0.00114349" ixy="-0.00003539" ixz="0.00003214" iyy="0.00108600" iyz="0.00013445" izz="0.00110242" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_hip.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RR_hip_joint" type="revolute">
+    <origin xyz="-0.152999574641922 -0.0599994732330435 -0.0600001395591401" rpy="0 0 0" />
+    <parent link="base" />
+    <child link="RR_hip" />
+    <axis xyz="-1 0 0" />
+    <limit lower="-1.5" upper="0" effort="6" velocity="28.80" />
+  </joint>
+  <link name="RR_thigh">
+    <inertial>
+      <origin xyz="-0.0547143122112738 -0.0356584597048889 -0.0169064837781644" rpy="0 0 0" />
+      <mass value="0.48074554" />
+      <inertia ixx="0.00111780" ixy="-0.00079085" ixz="-0.00080310" iyy="0.00231794" iyz="-0.00048974" izz="0.00230119" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_thigh.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RR_thigh_joint" type="revolute">
+    <origin xyz="-0.0559998574479382 -0.0483962427296829 0.0470544132941808" rpy="0 0 0" />
+    <parent link="RR_hip" />
+    <child link="RR_thigh" />
+    <axis xyz="0 -0.716968137917902 0.697105938298144" />
+    <limit lower="-0.785" upper="0.785" effort="6" velocity="28.80" />
+  </joint>
+  <link name="RR_calf">
+    <inertial>
+      <origin xyz="0.0700291670951063 0.0159658555227615 -0.0022277679039392" rpy="0 0 0" />
+      <mass value="0.14745425" />
+      <inertia ixx=" 0.00002268" ixy="-0.00004129" ixz="-0.00004247" iyy="0.00073677" iyz="-0.00000895" izz="0.00073626" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_calf.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RR_calf_joint" type="revolute">
+    <origin xyz="-0.152475581141278 -0.109581813299707 -0.0739724994411164" rpy="0 0 0" />
+    <parent link="RR_thigh" />
+    <child link="RR_calf" />
+    <axis xyz="0 -0.716968137917903 0.697105938298143" />
+    <limit lower="-1.11" upper="-0.1" effort="11.2" velocity="15.43" />
+  </joint>
+  <link name="RR_foot">
+    <inertial>
+      <origin xyz="-0.0105383478998522 0.00443295137554656 0.00455934568547118" rpy="0 0 0" />
+      <mass value="0.04697856" />
+      <inertia ixx="0.00000818" ixy="0" ixz="0" iyy="0.00000918" iyz="0" izz="0.00000915" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_foot.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.298039215686275 0.298039215686275 0.298039215686275 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="/home/saiki/IsaacGym/HTDW4438_HIMloco/resources/robots/uika/meshes/RR_foot.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="RR_foot_joint" type="fixed">
+    <origin xyz="0.211725899509593 0.00252783231169423 -0.0167659202148782" rpy="0 0 0" />
+    <parent link="RR_calf" />
+    <child link="RR_foot" />
+    <axis xyz="0 0 0" />
+  </joint>
+</robot>

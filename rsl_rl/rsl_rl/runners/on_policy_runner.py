@@ -35,6 +35,7 @@ import statistics
 
 from torch.utils.tensorboard import SummaryWriter
 import torch
+import wandb
 
 from rsl_rl.algorithms import PPO
 from rsl_rl.modules import ActorCritic, ActorCriticRecurrent
@@ -162,6 +163,21 @@ class OnPolicyRunner:
                 ep_string += f"""{f'Mean episode {key}:':>{pad}} {value:.4f}\n"""
         mean_std = self.alg.actor_critic.std.mean()
         fps = int(self.num_steps_per_env * self.env.num_envs / (locs['collection_time'] + locs['learn_time']))
+
+        # wandb logging
+        wandb_dict = {
+            'Loss/value_function': locs['mean_value_loss'],
+            'Loss/surrogate': locs['mean_surrogate_loss'],
+            'Loss/learning_rate': self.alg.learning_rate,
+            'Policy/mean_noise_std': mean_std.item(),
+            'Perf/total_fps': fps,
+            'Perf/collection time': locs['collection_time'],
+            'Perf/learning_time': locs['learn_time'],
+        }
+        if len(locs['rewbuffer']) > 0:
+            wandb_dict['Train/mean_reward'] = statistics.mean(locs['rewbuffer'])
+            wandb_dict['Train/mean_episode_length'] = statistics.mean(locs['lenbuffer'])
+        wandb.log(wandb_dict, step=locs['it'])
 
         self.writer.add_scalar('Loss/value_function', locs['mean_value_loss'], locs['it'])
         self.writer.add_scalar('Loss/surrogate', locs['mean_surrogate_loss'], locs['it'])

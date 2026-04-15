@@ -167,6 +167,12 @@ def get_args():
         {"name": "--num_envs", "type": int, "help": "Number of environments to create. Overrides config file if provided."},
         {"name": "--seed", "type": int, "help": "Random seed. Overrides config file if provided."},
         {"name": "--max_iterations", "type": int, "help": "Maximum number of training iterations. Overrides config file if provided."},
+        {"name": "--proj_name", "type": str, "default": "train", "help": "Wandb project name"},
+        {"name": "--exptid", "type": str, "default": "exp1", "help": "Experiment ID for wandb"},
+        {"name": "--debug", "action": "store_true", "default": False, "help": "Debug mode with fewer envs and disabled wandb"},
+        {"name": "--no_wandb", "action": "store_true", "default": False, "help": "Disable wandb logging"},
+        {"name": "--rows", "type": int, "help": "Terrain num_rows"},
+        {"name": "--cols", "type": int, "help": "Terrain num_cols"},
     ]
     # parse arguments
     args = gymutil.parse_arguments(

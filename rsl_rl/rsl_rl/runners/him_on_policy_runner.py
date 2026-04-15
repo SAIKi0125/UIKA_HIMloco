@@ -35,6 +35,7 @@ import statistics
 
 from torch.utils.tensorboard import SummaryWriter
 import torch
+import wandb
 
 from rsl_rl.algorithms import PPO, HIMPPO
 from rsl_rl.modules import HIMActorCritic
@@ -182,6 +183,24 @@ class HIMOnPolicyRunner:
         self.writer.add_scalar('Perf/total_fps', fps, locs['it'])
         self.writer.add_scalar('Perf/collection time', locs['collection_time'], locs['it'])
         self.writer.add_scalar('Perf/learning_time', locs['learn_time'], locs['it'])
+
+        # wandb logging
+        wandb_dict = {
+            'Loss/value_function': locs['mean_value_loss'],
+            'Loss/surrogate': locs['mean_surrogate_loss'],
+            'Loss/Estimation Loss': locs['mean_estimation_loss'],
+            'Loss/Swap Loss': locs['mean_swap_loss'],
+            'Loss/learning_rate': self.alg.learning_rate,
+            'Policy/mean_noise_std': mean_std.item(),
+            'Perf/total_fps': fps,
+            'Perf/collection time': locs['collection_time'],
+            'Perf/learning_time': locs['learn_time'],
+        }
+        if len(locs['rewbuffer']) > 0:
+            wandb_dict['Train/mean_reward'] = statistics.mean(locs['rewbuffer'])
+            wandb_dict['Train/mean_episode_length'] = statistics.mean(locs['lenbuffer'])
+        wandb.log(wandb_dict, step=locs['it'])
+
         if len(locs['rewbuffer']) > 0:
             self.writer.add_scalar('Train/mean_reward', statistics.mean(locs['rewbuffer']), locs['it'])
             self.writer.add_scalar('Train/mean_episode_length', statistics.mean(locs['lenbuffer']), locs['it'])

@@ -189,7 +189,6 @@ class LeggedRobotCfg(BaseConfig):
         clearance_height_target = 0.09
 
 
-
     class normalization:
         class obs_scales:
             lin_vel = 2.0

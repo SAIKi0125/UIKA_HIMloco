@@ -15,4 +15,13 @@ deploy/deploy_mujoco/reports/
 wandb
 deploy/deploy_mujoco.zip
 resources/robots/uika.zip
-rl_sar-UIKA/
+
+# Keep rl_sar-UIKA source/docs, but ignore generated artifacts and vendored binaries.
+!rl_sar-UIKA/
+rl_sar-UIKA/build/
+rl_sar-UIKA/install/
+rl_sar-UIKA/log/
+rl_sar-UIKA/cmake_build/
+rl_sar-UIKA/**/.git/
+rl_sar-UIKA/library/inference_runtime/
+rl_sar-UIKA/policy/uika/himloco/policy.onnx

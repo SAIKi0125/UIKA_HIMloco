@@ -193,4 +193,4 @@ dependencies:
       - watchdog==4.0.2
       - werkzeug==3.0.6
       - zipp==3.20.2
-prefix: /home/lain/miniconda3/envs/Lain_env
+prefix: /home/lain/miniconda3/envs/HIMloco_env

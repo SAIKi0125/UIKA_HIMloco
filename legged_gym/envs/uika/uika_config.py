@@ -5,7 +5,7 @@ class UIKACfg(LeggedRobotCfg):
     # 1. 环境与地形 (适配 HimLoco)
     # ==========================
     class env(LeggedRobotCfg.env):
-        num_envs = 2048
+        num_envs = 4096 # 4096 envs for stable learning with 48 steps per env and 128 mini-batch size
 
         # 角速度(3) + 重力向量(3) + 指令(3) + 关节位置(12) + 关节速度(12) + 上一帧动作(12) = 45
         num_one_step_observations = 45
@@ -98,7 +98,7 @@ class UIKACfg(LeggedRobotCfg):
     # ==========================
     class commands(LeggedRobotCfg.commands):
         curriculum = True # 开启课程学习
-        max_curriculum = 1 # 课程学习最大值
+        max_curriculum = 0.5 # 课程学习最大值
         num_commands = 4  # x vel, y vel, yaw vel, heading
         resampling_time = 10. # 每 10 秒重新采样一次指令
         heading_command = False # 是否使用朝向指令
@@ -136,38 +136,38 @@ class UIKACfg(LeggedRobotCfg):
     # ==========================
     class domain_rand(LeggedRobotCfg.domain_rand):
         randomize_friction = True
-        friction_range = [0.8, 1.2] # Stage 0: keep mild friction variation only
+        friction_range = [0.6, 1.5] # Stage 3: stronger but still bounded ground variation
 
         # URDF total mass is about 2 kg heavier than the real robot. Use a
-        # deterministic base-mass offset for Stage 0 instead of scaling inertia.
+        # small range around the measured offset instead of scaling inertia.
         randomize_payload_mass = True
-        payload_mass_range = [-2.0, -2.0]
-        randomize_com_displacement = False
-        com_displacement_range = [-0.02, 0.02]
+        payload_mass_range = [-2.5, -1.5]
+        randomize_com_displacement = True
+        com_displacement_range = [-0.04, 0.04]
 
         randomize_initial_joint_pos = True
         initial_joint_pos_range = [0.9, 1.1]
 
-        push_robots = False # Stage 0: add pushes after the base gait is stable
+        push_robots = True
         push_interval_s = 15
-        max_push_vel_xy = 0.5
+        max_push_vel_xy = 0.7
 
-        randomize_motor_strength = False
-        motor_strength_range = [0.85, 1.15] # 模拟电机力矩输出误差
+        randomize_motor_strength = True
+        motor_strength_range = [0.8, 1.2] # 模拟电机力矩输出误差
 
         # 关节 PD 参数随机化
-        randomize_kp = False
-        kp_range = [0.85, 1.15]
-        randomize_kd = False
-        kd_range = [0.85, 1.15]
+        randomize_kp = True
+        kp_range = [0.8, 1.2]
+        randomize_kd = True
+        kd_range = [0.8, 1.2]
 
         # 外力干扰 (Disturbance)
-        disturbance = False
-        disturbance_range = [-2.0, 2.0]
+        disturbance = True
+        disturbance_range = [-5.0, 5.0]
         disturbance_interval = 8
 
         # 延迟随机化 (模拟通信/计算延迟)
-        delay = False
+        delay = True
 
     # ==========================
     # 7. 奖励函数
@@ -181,15 +181,15 @@ class UIKACfg(LeggedRobotCfg):
         class scales(LeggedRobotCfg.rewards.scales):
 
             termination = -0.0              # 终止条件惩罚
-            tracking_lin_vel = 1.0          # 追踪线速度奖励
-            tracking_ang_vel = 0.5       # 追踪角速度奖励
+            tracking_lin_vel = 3.0          # 追踪线速度奖励
+            tracking_ang_vel = 1       # 追踪角速度奖励
             lin_vel_z = -2.0                # 垂直速度惩罚
             ang_vel_xy = -0.05              # 水平角速度惩罚
-            orientation = -1.0             # 机身方向惩罚
+            orientation = -1.5             # 机身方向惩罚
             dof_acc = -2.5e-7               # 关节加速度惩罚
             joint_power = -2e-5             # 关节功率惩罚
 
-            base_height = -0.5
+            base_height = -1.0
             # base_height_linear = -1.0        # 线性高度惩罚（保持目标高度）
             default_pos_linear = -0.02        # 惩罚偏离默认关节位置
             diagonal_sync = -0.1             # 对角线腿部同步惩罚
@@ -200,7 +200,7 @@ class UIKACfg(LeggedRobotCfg):
             smoothness = -0.02              # 平滑度惩罚
             feet_air_time = 0.05             # 脚离地时间奖励
             feet_stumble = -0.0             # 脚绊倒惩罚
-            stand_still = -0.5               # 静止状态惩罚
+            stand_still = -1.5               # 静止状态惩罚
             torques = -5e-6                  # 扭矩惩罚
             dof_vel = -5e-5                  # 关节速度惩罚
             dof_pos_limits = -0.0           # 关节位置限制惩罚
@@ -293,7 +293,7 @@ class UIKACfgPPO(LeggedRobotCfgPPO):
         learning_rate = 5e-4
 
     class runner(LeggedRobotCfgPPO.runner):
-        run_name = 'uika_stage0_stable'
+        run_name = 'uika_stage3_rand'
         experiment_name = 'uika'
         max_iterations = 10000 # 最大训练迭代次数
         save_interval = 100 # 每 100 次迭代保存一次模型

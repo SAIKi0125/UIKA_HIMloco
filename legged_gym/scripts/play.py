@@ -128,7 +128,8 @@ def play(args, x_vel=0.3, y_vel=0.0, yaw_vel=0.0):
     env_cfg.domain_rand.push_robots = False
     args = get_args()
     env_cfg.domain_rand.disturbance = False
-    env_cfg.domain_rand.randomize_payload_mass = False
+    env_cfg.domain_rand.randomize_payload_mass = True
+    env_cfg.domain_rand.payload_mass_range = [-2.0, -2.0]
     env_cfg.commands.heading_command = False
     # env_cfg.terrain.mesh_type = 'plane'
     # prepare environment
@@ -217,6 +218,6 @@ if __name__ == '__main__':
     RECORD_FRAMES = False
     MOVE_CAMERA = False
     args = get_args()
-    play(args, x_vel=1.0, y_vel=0.0, yaw_vel=0.0)
+    play(args, x_vel=0.3, y_vel=0.0, yaw_vel=0.0)
 
 # export PYTHONPATH=. && python legged_gym/scripts/play.py --task=htdw_4438 --load_run Jan27_17-56-48_htdw_4438_himloco_v1 --checkpoint 1500

@@ -76,7 +76,7 @@ class Htdw4438V2Cfg(LeggedRobotCfg):
     # ==========================
     class commands(LeggedRobotCfg.commands):
         curriculum = True # 
-        max_curriculum = 1.0
+        max_curriculum = 0.5 # 课程最大难度（对应最大指令范围）
         num_commands = 4  # x vel, y vel, yaw vel, heading
         resampling_time = 10. # 每 10 秒重新采样一次指令
         heading_command = True # 是否使用朝向指令
@@ -164,8 +164,8 @@ class Htdw4438V2Cfg(LeggedRobotCfg):
             hip_mirror_symmetry = -0.1      # 髋关节镜像对称惩罚
 
             foot_clearance = -0.0          # 脚部高度惩罚（防止拖脚）
-            action_rate = -0.01             # 动作变化率惩罚（平滑控制）
-            smoothness = -0.01              # 平滑度惩罚（流畅运动）
+            action_rate = -0.02             # 动作变化率惩罚（平滑控制）
+            smoothness = -0.02              # 平滑度惩罚（流畅运动）
             feet_air_time = 0.05             # 脚离地时间奖励（鼓励摆动腿抬起）
             feet_stumble = -0.0             # 脚绊倒惩罚（暂不使用）
             stand_still = -1.0               # 静止状态惩罚

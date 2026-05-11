@@ -30,7 +30,7 @@
     <worldbody>
         <body name="robot" pos="0 0 0.35" quat="1 0 0 0">
             <joint name="float_base" type="free" limited="false"/>
-            <inertial pos="0.0993589953258177 -0.000347868138743462 -0.0602742254852854" mass="6.09961854" diaginertia="0.02511856 0.07600646 0.08133534"/>
+            <inertial pos="0.0993589953258177 -0.000347868138743462 -0.0602742254852854" mass="4.09961854" diaginertia="0.02511856 0.07600646 0.08133534"/>
             <site name="imu" pos="0 0 0" />
             <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.898 0.917 0.929 1" mesh="base" />
 

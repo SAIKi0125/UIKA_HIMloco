@@ -27,6 +27,8 @@ python legged_gym/scripts/train.py --task=uika --proj_name uika --exptid uika_ru
 export PYTHONPATH=$PWD
 python legged_gym/scripts/train.py --task=uika --proj_name uika --exptid uika_run1
 python legged_gym/scripts/train.py --task=uika --proj_name uika --exptid uika_run1 --resume --load_run <run_name> --checkpoint <ckpt>
+python train.py --resume --task uika --load_run Apr16_14-15-33_001 --checkpoint 1500 --num_envs 4096 --proj_name himloco --exptid 1 --experiment_name uika --run_name 002 
+
 ```
 
 训练默认会上报到 `wandb`。如果只想本地跑，可以加 `--no_wandb`。

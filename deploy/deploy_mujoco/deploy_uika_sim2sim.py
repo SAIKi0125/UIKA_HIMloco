@@ -14,12 +14,15 @@ from onnx_path_utils import resolve_onnx_path
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, "..", ".."))
 YAML_PATH = os.path.join(SCRIPT_DIR, "configs", "uika.yaml")
-XML_PATH = os.path.join(PROJECT_ROOT, "resources", "robots", "uika", "xml", "scene.xml")
+DEFAULT_XML_PATH = os.path.join(PROJECT_ROOT, "resources", "robots", "uika", "xml", "scene.xml")
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Deploy UIKA policy in MuJoCo (sim2sim from Isaac Gym).")
     parser.add_argument("--onnx", type=str, default=None, help="Absolute or relative path to ONNX policy.")
+    parser.add_argument("--cmd-x", type=float, default=None, help="Fixed x velocity command. Overrides cmd_init[0].")
+    parser.add_argument("--cmd-y", type=float, default=None, help="Fixed y velocity command. Overrides cmd_init[1].")
+    parser.add_argument("--cmd-yaw", type=float, default=None, help="Fixed yaw velocity command. Overrides cmd_init[2].")
     return parser.parse_args()
 
 
@@ -33,7 +36,6 @@ ONNX_PATH = resolve_onnx_path(
 )
 
 print(f"YAML: {YAML_PATH}")
-print(f"XML : {XML_PATH}")
 print(f"ONNX: {ONNX_PATH}")
 
 # ================= 2. 全局变量 =================
@@ -41,6 +43,8 @@ print(f"ONNX: {ONNX_PATH}")
 cmd = np.array([0.0, 0.0, 0.0], dtype=np.float32)
 paused = False
 default_dof_pos = None # 将在 main 中加载
+keyboard_cmd_x = 0.3
+keyboard_cmd_yaw = 0.3
 
 # ================= 3. 辅助函数 =================
 
@@ -80,13 +84,13 @@ def on_press(key):
     global cmd
     try:
         if key == keyboard.Key.up:
-            cmd[0] = 0.66  # 前进
+            cmd[0] = keyboard_cmd_x  # 前进
         elif key == keyboard.Key.down:
-            cmd[0] = -0.4 # 后退
+            cmd[0] = -keyboard_cmd_x # 后退
         elif key == keyboard.Key.left:
-            cmd[2] = 0.3  # 左转
+            cmd[2] = keyboard_cmd_yaw  # 左转
         elif key == keyboard.Key.right:
-            cmd[2] = -0.3 # 右转
+            cmd[2] = -keyboard_cmd_yaw # 右转
     except AttributeError:
         pass
 
@@ -108,7 +112,7 @@ def key_callback(keycode):
 
 # ================= 5. 主程序 =================
 def run_simulation():
-    global cmd, default_dof_pos
+    global cmd, default_dof_pos, keyboard_cmd_x, keyboard_cmd_yaw
 
     # --- 加载 YAML 配置 ---
     if not os.path.exists(YAML_PATH):
@@ -124,26 +128,54 @@ def run_simulation():
     num_obs = int(config.get('num_obs', 270))
     num_one_step_obs = int(config.get('num_one_step_obs', 45))
     init_base_height = float(config.get('init_base_height', 0.35))
+    keyboard_cmd_x = float(config.get('keyboard_cmd_x', keyboard_cmd_x))
+    keyboard_cmd_yaw = float(config.get('keyboard_cmd_yaw', keyboard_cmd_yaw))
+
+    initial_cmd = np.array(config.get('cmd_init', [0.0, 0.0, 0.0]), dtype=np.float32)
+    if ARGS.cmd_x is not None:
+        initial_cmd[0] = ARGS.cmd_x
+    if ARGS.cmd_y is not None:
+        initial_cmd[1] = ARGS.cmd_y
+    if ARGS.cmd_yaw is not None:
+        initial_cmd[2] = ARGS.cmd_yaw
+    cmd[:] = initial_cmd
 
     kps = np.array(config['kps'], dtype=np.float32)
     kds = np.array(config['kds'], dtype=np.float32)
     default_dof_pos = np.array(config['default_angles'], dtype=np.float32)
+    num_actions = len(default_dof_pos)
+
+    if len(kps) != num_actions or len(kds) != num_actions:
+        print("错误: YAML 中 kps/kds/default_angles 维度不一致")
+        return
 
     # 缩放因子
     lin_vel_scale = config['lin_vel_scale']
     ang_vel_scale = config['ang_vel_scale']
     dof_pos_scale = config['dof_pos_scale']
     dof_vel_scale = config['dof_vel_scale']
-    action_scale = config['action_scale']
+    action_scale_cfg = config['action_scale']
+    action_scale = np.array(action_scale_cfg, dtype=np.float32)
+    if action_scale.ndim == 0:
+        action_scale = np.full(num_actions, float(action_scale), dtype=np.float32)
+    if len(action_scale) != num_actions:
+        print("错误: YAML 中 action_scale 必须是标量或长度等于 default_angles 的列表")
+        return
     cmd_scale = np.array(config.get('cmd_scale', [lin_vel_scale, lin_vel_scale, ang_vel_scale]), dtype=np.float32)
+    xml_path_cfg = config.get("xml_path", "")
+    if xml_path_cfg:
+        xml_path = xml_path_cfg.replace("{LEGGED_GYM_ROOT_DIR}", PROJECT_ROOT)
+    else:
+        xml_path = DEFAULT_XML_PATH
 
     # --- 加载 MuJoCo & ONNX ---
-    if not os.path.exists(XML_PATH):
-        print(f"错误: 找不到模型文件 {XML_PATH}")
+    print(f"XML : {xml_path}")
+    if not os.path.exists(xml_path):
+        print(f"错误: 找不到模型文件 {xml_path}")
         return
 
     print("正在加载 MuJoCo 模型...")
-    model = mujoco.MjModel.from_xml_path(XML_PATH)
+    model = mujoco.MjModel.from_xml_path(xml_path)
     data = mujoco.MjData(model)
     model.opt.timestep = sim_dt
     use_gyro_sensor = True
@@ -166,12 +198,13 @@ def run_simulation():
     mujoco.mj_forward(model, data)
 
     target_dof_pos = default_dof_pos.copy()
-    action = np.zeros(12, dtype=np.float32)
+    action = np.zeros(num_actions, dtype=np.float32)
 
     # 键盘监听
     listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     listener.start()
-    print("仿真开始！使用方向键控制移动，空格键暂停。")
+    print(f"初始命令: vx={cmd[0]:.3f}, vy={cmd[1]:.3f}, yaw={cmd[2]:.3f}")
+    print(f"仿真开始！方向键速度: vx=±{keyboard_cmd_x:.3f}, yaw=±{keyboard_cmd_yaw:.3f}，空格键暂停。")
 
     history_len = max(1, num_obs // num_one_step_obs)
     obs_dim = num_one_step_obs
